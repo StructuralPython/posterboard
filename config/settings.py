@@ -128,7 +128,7 @@ LINKEDIN_RENEW_WARNING_DAYS = int(env("LINKEDIN_RENEW_WARNING_DAYS", "14"))
 POSTERBOARD_ENCRYPTION_KEY = env("POSTERBOARD_ENCRYPTION_KEY")
 
 # Shown on the public privacy policy (/privacy/) as the address for questions.
-POSTERBOARD_CONTACT_EMAIL = env("POSTERBOARD_CONTACT_EMAIL")
+POSTERBOARD_CONTACT_EMAIL = env("POSTERBOARD_CONTACT_EMAIL", "connor@structuralpython.com")
 
 # Seconds between scheduler passes.
 SCHEDULER_INTERVAL = int(env("POSTERBOARD_SCHEDULER_INTERVAL", "30"))

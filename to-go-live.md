@@ -41,7 +41,7 @@ GitHub Actions builds the image on every push to `main` and pushes it to `ghcr.i
   | `POSTERBOARD_ENCRYPTION_KEY` | from step 2 |
   | `POSTERBOARD_URL` | `https://posterboard.structuralpython.com` |
   | `POSTERBOARD_TIME_ZONE` | `America/Vancouver`, or your zone |
-  | `POSTERBOARD_CONTACT_EMAIL` | the address the privacy policy gives for questions (optional) |
+  | `POSTERBOARD_CONTACT_EMAIL` | optional; defaults to `connor@structuralpython.com` |
   | `LINKEDIN_CLIENT_ID` / `LINKEDIN_CLIENT_SECRET` | from step 1 |
   | `TINYAUTH_APPURL` | `https://auth.posterboard.structuralpython.com` |
   | `TINYAUTH_AUTH_USERS` | from step 2 |

@@ -240,3 +240,7 @@ def test_caddy_serves_the_privacy_policy_without_tinyauth():
 def test_the_privacy_policy_shows_the_contact_address(settings):
     settings.POSTERBOARD_CONTACT_EMAIL = "hello@example.com"
     assert "hello@example.com" in Client().get("/privacy/").content.decode()
+
+
+def test_the_privacy_policy_contact_defaults_to_connor():
+    assert "connor@structuralpython.com" in Client().get("/privacy/").content.decode()

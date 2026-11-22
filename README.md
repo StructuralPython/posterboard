@@ -113,7 +113,7 @@ Set the environment variables from `.env.example`:
 | `DJANGO_SECRET_KEY` | a long random string |
 | `POSTERBOARD_URL` | `https://posterboard.structuralpython.com` |
 | `POSTERBOARD_TIME_ZONE` | your time zone, e.g. `America/Vancouver` |
-| `POSTERBOARD_CONTACT_EMAIL` | the contact address on the privacy policy (optional) |
+| `POSTERBOARD_CONTACT_EMAIL` | the contact address on the privacy policy (default `connor@structuralpython.com`) |
 | `LINKEDIN_CLIENT_ID`, `LINKEDIN_CLIENT_SECRET` | from the LinkedIn app |
 | `TINYAUTH_APPURL` | `https://auth.posterboard.structuralpython.com` |
 | `TINYAUTH_AUTH_USERS` | from step 3 |
