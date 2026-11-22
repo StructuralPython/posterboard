@@ -17,6 +17,12 @@
 :{$PORT:8080} {
 	encode zstd gzip
 
+	# bunny.net forwards plain-http visits too, marked X-Forwarded-Proto: http.
+	# Send them to https first, or tinyauth would be asked to return the user
+	# to an http address after signing in (and refuse, as a downgrade).
+	@insecure header X-Forwarded-Proto http
+	redir @insecure https://{host}{uri} permanent
+
 	@login host {$TINYAUTH_HOST}
 	handle @login {
 		reverse_proxy 127.0.0.1:{$TINYAUTH_PORT:3000}
