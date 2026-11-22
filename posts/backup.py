@@ -56,7 +56,16 @@ def snapshot(db_path: Path, target: Path) -> Path:
 
 
 def _digest(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+    """A digest of the database's contents (its SQL dump), not its bytes: SQLite's
+    file header changes on every copy even when no row has."""
+    con = sqlite3.connect(path)
+    try:
+        h = hashlib.sha256()
+        for line in con.iterdump():
+            h.update(line.encode())
+        return h.hexdigest()
+    finally:
+        con.close()
 
 
 def backup_once(state_dir: Path | None = None) -> bool:

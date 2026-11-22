@@ -4,7 +4,8 @@
 #   loop, and Caddy in front. If any of them exits, the container stops, and
 #   Magic Containers restarts it (the database is restored from backup first).
 set -euo pipefail
-cd /app
+APP_DIR="${APP_DIR:-/app}"
+cd "$APP_DIR"
 
 : "${POSTERBOARD_DATA_DIR:=/data}"
 export POSTERBOARD_DATA_DIR
@@ -35,7 +36,7 @@ start gunicorn config.wsgi:application \
   --access-logfile - --forwarded-allow-ips 127.0.0.1
 start python manage.py run_scheduler
 start python manage.py backup --every 300
-start caddy run --config /app/deploy/Caddyfile --adapter caddyfile
+start caddy run --config "$APP_DIR/deploy/Caddyfile" --adapter caddyfile
 
 stop() {
   kill -TERM "${pids[@]}" 2>/dev/null || true
