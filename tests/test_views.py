@@ -220,3 +220,23 @@ def test_callback_reports_a_denied_sign_in(client):
 def test_disconnect(client, connection):
     client.post("/linkedin/disconnect/")
     assert LinkedInConnection.current() is None
+
+
+def test_the_privacy_policy_is_public():
+    response = Client().get("/privacy/")
+    assert response.status_code == 200
+    assert "How Posterboard handles your data" in response.content.decode()
+    # The rest of the site still needs the tinyauth header.
+    assert Client().get("/").status_code == 403
+
+
+def test_caddy_serves_the_privacy_policy_without_tinyauth():
+    caddyfile = open("deploy/Caddyfile").read()
+    public = caddyfile.split("@public path", 1)[1].split("handle {", 1)[0]
+    assert "/privacy/" in public and "forward_auth" not in public
+    assert "request_header -Remote-User" in public
+
+
+def test_the_privacy_policy_shows_the_contact_address(settings):
+    settings.POSTERBOARD_CONTACT_EMAIL = "hello@example.com"
+    assert "hello@example.com" in Client().get("/privacy/").content.decode()

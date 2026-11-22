@@ -14,5 +14,6 @@ urlpatterns = [
     path("linkedin/callback/", views.linkedin_callback, name="linkedin_callback"),
     path("linkedin/disconnect/", views.linkedin_disconnect, name="linkedin_disconnect"),
     path("media/<path:path>", views.media_file, name="media"),
+    path("privacy/", views.privacy, name="privacy"),
     path("healthz", views.healthz, name="healthz"),
 ]

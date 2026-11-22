@@ -3,6 +3,9 @@
 from django.conf import settings
 from django.http import HttpResponseForbidden
 
+# Pages anyone may open. deploy/Caddyfile lets the same paths past tinyauth.
+PUBLIC_PATHS = {"/privacy/", "/healthz"}
+
 
 class TrustedUserMiddleware:
     """
@@ -18,6 +21,11 @@ class TrustedUserMiddleware:
 
     def __call__(self, request):
         user = request.META.get(self.meta_key) or settings.DEV_USER
+        if request.path in PUBLIC_PATHS:
+            # Caddy serves these without tinyauth (LinkedIn's reviewers and
+            # anyone else may read the privacy policy).
+            request.posterboard_user = user or ""
+            return self.get_response(request)
         if not user:
             return HttpResponseForbidden("Sign in through tinyauth.")
         request.posterboard_user = user

@@ -70,4 +70,8 @@ jobs:
           curl -sf http://127.0.0.1:8080/healthz
           # Every app request must go through tinyauth.
           test "$(curl -s -o /dev/null -w '%{http_code}' -H 'Host: posterboard.localhost' http://127.0.0.1:8080/)" = 401
+          # The privacy policy and its stylesheet are public.
+          curl -sf -H 'Host: posterboard.localhost' http://127.0.0.1:8080/privacy/ | grep -q 'Privacy policy'
+          css=$(curl -s -H 'Host: posterboard.localhost' http://127.0.0.1:8080/privacy/ | grep -o '/static/[^"]*\.css')
+          curl -sf -o /dev/null -H 'Host: posterboard.localhost' "http://127.0.0.1:8080$css"
           docker logs pb 2>&1 | tail -20

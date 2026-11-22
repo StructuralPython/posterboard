@@ -235,5 +235,12 @@ def media_file(request, path: str):
     return serve(request, str(target.relative_to(root)), document_root=str(root))
 
 
+def privacy(request):
+    return render(request, "posts/privacy.html", {
+        "contact_email": settings.POSTERBOARD_CONTACT_EMAIL,
+        "site_url": settings.POSTERBOARD_URL,
+    })
+
+
 def healthz(request):
     return HttpResponse("ok")

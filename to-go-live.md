@@ -7,6 +7,7 @@ Check each item off as you go. More detail is in README.md.
 - [ ] Create an app at <https://www.linkedin.com/developers/apps>, named "Posterboard". LinkedIn requires every app to be associated with a company page, so pick StructuralPython; this doesn't affect who posts. Posts go out from the personal profile you sign in with. LinkedIn doesn't allow "Linked" or "In" in app names.
 - [ ] In **Products**, add **Share on LinkedIn** and **Sign In with LinkedIn using OpenID Connect**.
 - [ ] In **Auth**, add the redirect URL `https://posterboard.structuralpython.com/linkedin/callback/`.
+- [ ] In **Settings**, set the privacy policy URL to `https://posterboard.structuralpython.com/privacy/` (public, no sign-in).
 - [ ] Copy the **Client ID** and **Client Secret**.
 
 ## 2. Secrets
@@ -40,6 +41,7 @@ GitHub Actions builds the image on every push to `main` and pushes it to `ghcr.i
   | `POSTERBOARD_ENCRYPTION_KEY` | from step 2 |
   | `POSTERBOARD_URL` | `https://posterboard.structuralpython.com` |
   | `POSTERBOARD_TIME_ZONE` | `America/Vancouver`, or your zone |
+  | `POSTERBOARD_CONTACT_EMAIL` | the address the privacy policy gives for questions (optional) |
   | `LINKEDIN_CLIENT_ID` / `LINKEDIN_CLIENT_SECRET` | from step 1 |
   | `TINYAUTH_APPURL` | `https://auth.posterboard.structuralpython.com` |
   | `TINYAUTH_AUTH_USERS` | from step 2 |
@@ -57,7 +59,7 @@ GitHub Actions builds the image on every push to `main` and pushes it to `ghcr.i
 ## 7. First run
 
 - [ ] Open `https://posterboard.structuralpython.com`. You should land on the tinyauth login page; sign in.
-- [ ] Open `/healthz` while signed out. It should return `ok`, and the rest of the site should redirect you to login.
+- [ ] Open `/healthz` and `/privacy/` while signed out. They should load, and the rest of the site should redirect you to login.
 - [ ] Click **Connect LinkedIn**. The dashboard should show your name and "59 days left".
 - [ ] Post one of each kind with **Post now**, then check each on LinkedIn:
   - [ ] text with **bold**, *italic*, `code`, a #hashtag and (parentheses)

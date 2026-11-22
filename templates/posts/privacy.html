@@ -1,0 +1,100 @@
+{% load static %}<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Privacy policy · Posterboard</title>
+  <link rel="stylesheet" href="{% static 'posterboard/app.css' %}">
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <span class="wordmark"><span class="pin" aria-hidden="true"></span>Posterboard</span>
+    </div>
+  </header>
+  <main class="policy">
+    <p class="eyebrow">Privacy policy</p>
+    <h1>How Posterboard handles your data</h1>
+    <p class="muted small">Effective 22 November 2026</p>
+
+    <p>Posterboard ({{ site_url }}) is a private tool run by StructuralPython for writing,
+    scheduling and publishing posts to LinkedIn. It is not open to the public: only
+    people the operator has given an account can sign in. This policy explains what
+    Posterboard stores, why, and what you can do about it.</p>
+
+    <h2>What we collect</h2>
+    <ul>
+      <li><strong>Your Posterboard sign-in.</strong> A username and a hashed password, set up
+        by the operator. A session cookie keeps you signed in.</li>
+      <li><strong>Your LinkedIn connection.</strong> When you choose <em>Connect LinkedIn</em>,
+        LinkedIn sends Posterboard your member ID, your name, your profile picture
+        address and an access token that lets Posterboard post on your behalf. The
+        token is stored encrypted and expires after about 60 days.</li>
+      <li><strong>Your posts.</strong> The text you write, the images, videos and PDFs you
+        attach, the times you schedule, and a record of what was published, when, and
+        LinkedIn's ID for the published post.</li>
+    </ul>
+    <p>Posterboard does not use analytics, advertising or tracking of any kind. It does
+    not read your LinkedIn feed, connections, messages or comments.</p>
+
+    <h2>How we use it</h2>
+    <ul>
+      <li>To publish the posts you write to your own LinkedIn profile, at the time you choose.</li>
+      <li>To show your drafts, scheduled posts and previously published posts.</li>
+      <li>To show who is connected and when the LinkedIn connection needs renewing.</li>
+    </ul>
+    <p>Posterboard only posts what you have written and scheduled. It never posts anything
+    on its own.</p>
+
+    <h2>Who it is shared with</h2>
+    <ul>
+      <li><strong>LinkedIn</strong> receives the posts and media you publish, through
+        LinkedIn's official API. Once published, a post is governed by
+        <a href="https://www.linkedin.com/legal/privacy-policy">LinkedIn's privacy policy</a>.</li>
+      <li><strong>bunny.net</strong> hosts Posterboard and stores its encrypted backups.
+        It processes the data only to run the service.</li>
+    </ul>
+    <p>Your data is not sold, rented or shared with anyone else.</p>
+
+    <h2>Cookies</h2>
+    <p>Posterboard uses only the cookies it needs to work: a sign-in session cookie, a
+    security cookie that protects forms (CSRF), a short-lived cookie that checks the
+    LinkedIn sign-in came from you, and one that carries on-screen messages between
+    pages. None is used for tracking.</p>
+
+    <h2>How long we keep it</h2>
+    <ul>
+      <li>The LinkedIn token is kept until it expires, or until you choose
+        <em>Disconnect</em>, which deletes it.</li>
+      <li>Drafts and scheduled posts are kept until you delete them. The record of
+        published posts is kept as a history of what went out.</li>
+      <li>Backups are taken every five minutes, with one copy kept per day.</li>
+    </ul>
+
+    <h2>Your choices</h2>
+    <ul>
+      <li>Disconnect LinkedIn at any time from the dashboard.</li>
+      <li>Revoke Posterboard's access from LinkedIn itself, under
+        <a href="https://www.linkedin.com/mypreferences/d/data-sharing-for-permitted-services">Settings → Data privacy → Permitted services</a>.</li>
+      <li>Delete or edit published posts on LinkedIn directly.</li>
+      <li>Ask for a copy of your data, or for it to be deleted, using the contact below.</li>
+    </ul>
+
+    <h2>Security</h2>
+    <p>Every page except this one requires signing in. The connection is encrypted
+    (HTTPS), the LinkedIn token is encrypted at rest, and access is limited to the
+    operator.</p>
+
+    <h2>Changes</h2>
+    <p>If this policy changes, the new version will be posted here with a new effective date.</p>
+
+    <h2>Contact</h2>
+    {% if contact_email %}
+      <p>Questions or requests: <a href="mailto:{{ contact_email }}">{{ contact_email }}</a>.</p>
+    {% else %}
+      <p>Questions or requests: contact StructuralPython through
+        <a href="https://structuralpython.com">structuralpython.com</a>.</p>
+    {% endif %}
+  </main>
+</body>
+</html>

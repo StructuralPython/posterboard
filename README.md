@@ -47,6 +47,8 @@ bunny.net edge (TLS) ──► Caddy :8080 ──► tinyauth :3000   (login pag
 - **Caddy** asks tinyauth about every request (`forward_auth`) and passes the signed-in
   user to Django in `Remote-User`. A client's own `Remote-User` header is removed first.
   Gunicorn listens on localhost only, and Django refuses any request without the header.
+  The exceptions are the privacy policy (`/privacy/`, for LinkedIn's app settings), its
+  stylesheet and `/healthz`, which are public.
 - **tinyauth** serves the login page on its own hostname,
   `auth.posterboard.structuralpython.com`. Its session cookie is set on
   `posterboard.structuralpython.com`, which covers the app.
@@ -111,6 +113,7 @@ Set the environment variables from `.env.example`:
 | `DJANGO_SECRET_KEY` | a long random string |
 | `POSTERBOARD_URL` | `https://posterboard.structuralpython.com` |
 | `POSTERBOARD_TIME_ZONE` | your time zone, e.g. `America/Vancouver` |
+| `POSTERBOARD_CONTACT_EMAIL` | the contact address on the privacy policy (optional) |
 | `LINKEDIN_CLIENT_ID`, `LINKEDIN_CLIENT_SECRET` | from the LinkedIn app |
 | `TINYAUTH_APPURL` | `https://auth.posterboard.structuralpython.com` |
 | `TINYAUTH_AUTH_USERS` | from step 3 |

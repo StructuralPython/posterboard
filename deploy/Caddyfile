@@ -26,6 +26,13 @@
 		respond "ok" 200
 	}
 
+	# Public: the privacy policy and the stylesheet it uses. Never signed in.
+	@public path /privacy/ /static/*
+	handle @public {
+		request_header -Remote-User
+		reverse_proxy 127.0.0.1:{$APP_PORT:8000}
+	}
+
 	handle {
 		# route keeps these in the order written: drop any client-supplied user
 		# header first, then let tinyauth set the real one.

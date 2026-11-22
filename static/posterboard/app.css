@@ -187,3 +187,11 @@ label.inline { font-weight: 400; display: inline-flex; gap: .3rem; align-items: 
 .published-md { font-family: var(--mono); font-size: .85rem; }
 
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+/* Privacy policy: one readable column. */
+.policy { max-width: 68ch; margin: 0 auto; padding: 2rem max(16px, env(safe-area-inset-left)) 4rem; }
+.policy h1 { font-size: 1.6rem; margin: .2rem 0 .3rem; }
+.policy h2 { margin-top: 2rem; }
+.policy ul { padding-left: 1.2rem; }
+.policy li { margin: .35rem 0; }
+.policy a { color: var(--accent); }

@@ -127,6 +127,9 @@ LINKEDIN_RENEW_WARNING_DAYS = int(env("LINKEDIN_RENEW_WARNING_DAYS", "14"))
 # Fernet key for the LinkedIn token at rest; derived from SECRET_KEY when unset.
 POSTERBOARD_ENCRYPTION_KEY = env("POSTERBOARD_ENCRYPTION_KEY")
 
+# Shown on the public privacy policy (/privacy/) as the address for questions.
+POSTERBOARD_CONTACT_EMAIL = env("POSTERBOARD_CONTACT_EMAIL")
+
 # Seconds between scheduler passes.
 SCHEDULER_INTERVAL = int(env("POSTERBOARD_SCHEDULER_INTERVAL", "30"))
 
