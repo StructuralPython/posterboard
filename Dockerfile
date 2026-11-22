@@ -14,12 +14,14 @@ ENV PYTHONUNBUFFERED=1 \
     POSTERBOARD_DATA_DIR=/data \
     PORT=8080
 # Backups go to the bunny.net storage zone "posterboard-linkedin" through its
-# S3-compatible API. Set RCLONE_CONFIG_BUNNY_ENDPOINT (the zone's region) and
-# RCLONE_CONFIG_BUNNY_SECRET_ACCESS_KEY (the zone password) when deploying.
+# S3-compatible API, at its main region (Frankfurt; LA is a replica, which
+# bunny.net keeps in sync). Set RCLONE_CONFIG_BUNNY_SECRET_ACCESS_KEY (the zone
+# password) when deploying.
 ENV POSTERBOARD_BACKUP_REMOTE=bunny:posterboard-linkedin \
     RCLONE_CONFIG_BUNNY_TYPE=s3 \
     RCLONE_CONFIG_BUNNY_PROVIDER=Other \
     RCLONE_CONFIG_BUNNY_ACCESS_KEY_ID=posterboard-linkedin \
+    RCLONE_CONFIG_BUNNY_ENDPOINT=https://de-s3.storage.bunnycdn.com \
     RCLONE_CONFIG_BUNNY_FORCE_PATH_STYLE=true \
     RCLONE_CONFIG_BUNNY_NO_CHECK_BUCKET=true
 

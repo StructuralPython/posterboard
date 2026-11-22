@@ -83,9 +83,9 @@ Community Management API. See `shy-linkedin-plan.md` for that research.
 
 Backups go to the bunny.net storage zone `posterboard-linkedin`, through bunny.net's
 S3-compatible API. S3 has to be turned on when the zone is created; it can't be added
-later. The image already points rclone at the zone (`Dockerfile`); the deployment adds
-the zone's S3 endpoint, `https://<region>-s3.storage.bunnycdn.com`, and its password
-(the S3 secret key). See `.env.example`.
+later. The image already points rclone at the zone's main region, Frankfurt
+(`https://de-s3.storage.bunnycdn.com`; the LA replica is kept in sync by bunny.net).
+The deployment adds only the zone password, as the S3 secret key. See `.env.example`.
 
 ### 3. A tinyauth user
 
@@ -116,7 +116,6 @@ Set the environment variables from `.env.example`:
 | `LINKEDIN_CLIENT_ID`, `LINKEDIN_CLIENT_SECRET` | from the LinkedIn app |
 | `TINYAUTH_APPURL` | `https://auth.posterboard.structuralpython.com` |
 | `TINYAUTH_AUTH_USERS` | from step 3 |
-| `RCLONE_CONFIG_BUNNY_ENDPOINT` | `https://<region>-s3.storage.bunnycdn.com` |
 | `RCLONE_CONFIG_BUNNY_SECRET_ACCESS_KEY` | the storage zone password |
 
 Optional: `POSTERBOARD_ENCRYPTION_KEY` (a Fernet key for the stored token; derived from

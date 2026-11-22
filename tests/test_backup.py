@@ -101,3 +101,4 @@ def test_the_image_backs_up_to_the_s3_storage_zone():
     assert "POSTERBOARD_BACKUP_REMOTE=bunny:posterboard-linkedin" in dockerfile
     assert "RCLONE_CONFIG_BUNNY_TYPE=s3" in dockerfile
     assert "RCLONE_CONFIG_BUNNY_ACCESS_KEY_ID=posterboard-linkedin" in dockerfile
+    assert "RCLONE_CONFIG_BUNNY_ENDPOINT=https://de-s3.storage.bunnycdn.com" in dockerfile

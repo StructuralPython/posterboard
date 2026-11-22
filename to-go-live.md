@@ -19,7 +19,7 @@ Check each item off as you go. More detail is in README.md.
 ## 3. bunny.net storage (backups)
 
 - [ ] The storage zone is `posterboard-linkedin`, with **S3 compatibility** turned on. (S3 can only be turned on when a zone is created.)
-- [ ] Note its main region's S3 endpoint, `https://<region>-s3.storage.bunnycdn.com` (e.g. `ny`, `la`), and its password from the **Access** tab.
+- [ ] Note its password from the **Access** tab. The image already uses the main region's S3 endpoint, Frankfurt (`https://de-s3.storage.bunnycdn.com`); LA is a replica.
 
 ## 4. Image
 
@@ -45,10 +45,9 @@ GitHub Actions builds the image on every push to `main` and pushes it to `ghcr.i
   | `LINKEDIN_CLIENT_ID` / `LINKEDIN_CLIENT_SECRET` | from step 1 |
   | `TINYAUTH_APPURL` | `https://auth.posterboard.structuralpython.com` |
   | `TINYAUTH_AUTH_USERS` | from step 2 |
-  | `RCLONE_CONFIG_BUNNY_ENDPOINT` | the S3 endpoint from step 3 |
   | `RCLONE_CONFIG_BUNNY_SECRET_ACCESS_KEY` | the storage zone password, as is |
 
-  The image already sets the rest of the backup settings (zone `posterboard-linkedin`, S3).
+  The image already sets the rest of the backup settings (zone `posterboard-linkedin`, S3, Frankfurt).
 
 ## 6. Hostnames
 
