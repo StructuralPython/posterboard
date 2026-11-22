@@ -65,12 +65,12 @@
       {% endif %}
     </div>
   </form>
-  {% if post.pk %}
-    <form id="delete-form" method="post" action="{% url 'post_delete' post.pk %}">{% csrf_token %}</form>
-  {% endif %}
 
   <aside class="editor-preview">
     {% include "posts/_card.html" with mode="edit" %}
   </aside>
 </div>
+{% if post.pk %}
+  <form id="delete-form" method="post" action="{% url 'post_delete' post.pk %}" hidden>{% csrf_token %}</form>
+{% endif %}
 {% endblock %}

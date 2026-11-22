@@ -38,6 +38,7 @@
 }
 
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 html { -webkit-text-size-adjust: 100%; }
 body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.5 var(--font); }
 a { color: var(--accent); }
@@ -97,6 +98,7 @@ h2 { font-size: .8rem; text-transform: uppercase; letter-spacing: .07em; color: 
 @media (max-width: 760px) { .connection { grid-template-columns: 1fr; } }
 
 /* Lists */
+#lists { display: grid; gap: 1.5rem; }
 .list-section { display: grid; gap: .5rem; }
 .count { display: inline-block; min-width: 1.5em; padding: 0 .4em; border-radius: 999px; background: var(--line); color: var(--ink); font-size: .75rem; text-align: center; letter-spacing: 0; }
 .post-list { list-style: none; margin: 0; padding: 0; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
@@ -159,7 +161,8 @@ label.inline { font-weight: 400; display: inline-flex; gap: .3rem; align-items: 
 .li-sub { color: var(--li-muted); font-size: 12px; }
 .li-text-wrap { position: relative; padding: 8px 16px 4px; }
 .li-text { white-space: pre-wrap; overflow-wrap: anywhere; }
-[data-view=collapsed] .li-text { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; line-clamp: 3; overflow: hidden; }
+/* Three lines (14px x 1.43), cut without the browser's own ellipsis: "…more" covers the end. */
+[data-view=collapsed] .li-text { max-height: calc(3 * 1.43em); overflow: hidden; }
 .li-more { position: absolute; right: 16px; bottom: 4px; font: inherit; color: var(--li-muted); background: linear-gradient(90deg, transparent, var(--li-card) 22%); border: 0; padding: 0 0 0 2.2em; cursor: pointer; }
 .li-more:hover { color: var(--li-link); text-decoration: underline; }
 .li-link { color: var(--li-link); font-weight: 600; }
