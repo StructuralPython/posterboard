@@ -22,16 +22,15 @@ Check each item off as you go. More detail is in README.md.
 
 ## 4. Image
 
-- [ ] Build and push from a machine with Docker. There's none here.
-  ```bash
-  docker build -t ghcr.io/structuralpython/posterboard:latest .
-  docker push ghcr.io/structuralpython/posterboard:latest
-  ```
-  If the package is private, give Magic Containers registry credentials.
+GitHub Actions builds the image on every push to `main` and pushes it to `ghcr.io/structuralpython/posterboard` (`.github/workflows/image.yml`). It runs the tests first, then a smoke test of the built image.
+
+- [ ] Check that the latest **Test and build image** run is green: <https://github.com/StructuralPython/posterboard/actions>
+- [ ] The package is private (it inherits the repo's visibility). Create a GitHub token for Magic Containers: a classic PAT with only `read:packages`. Magic Containers logs in as `connorferster` with it.
+- [ ] To release a fixed version instead of `latest`, push a tag (`git tag v0.1.0 && git push --tags`) and deploy `:0.1.0`.
 
 ## 5. Magic Container
 
-- [ ] Create an app from the image, with container port **8080**.
+- [ ] Create an app from `ghcr.io/structuralpython/posterboard:latest` (registry `ghcr.io`, the token from step 4), with container port **8080**.
 - [ ] Set **min = max = 1 instance**. A second instance would run a second scheduler against its own copy of the database.
 - [ ] Set the environment variables:
 

@@ -96,10 +96,11 @@ needs the `$` signs doubled.
 
 ### 4. Image and Magic Container
 
-```bash
-docker build -t ghcr.io/structuralpython/posterboard:latest .
-docker push ghcr.io/structuralpython/posterboard:latest
-```
+GitHub Actions (`.github/workflows/image.yml`) tests every push. On `main` it builds the
+image and pushes it to `ghcr.io/structuralpython/posterboard:latest`, plus a `sha-…` tag
+and, for `v*` tags, the version. It then starts the image and checks that `/healthz`
+answers and that the app refuses requests that tinyauth hasn't signed in. The package is
+private, so Magic Containers needs a GitHub token with `read:packages`.
 
 In Magic Containers, create an app from the image and expose container port **8080**.
 Set the environment variables from `.env.example`:
