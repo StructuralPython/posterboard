@@ -74,3 +74,23 @@ def test_restore_with_no_backup_yet_starts_fresh(settings, tmp_path, monkeypatch
 
     monkeypatch.setattr(backup, "rclone", missing)
     assert not backup.restore_if_missing()
+
+
+def test_an_empty_database_file_counts_as_missing(calls, settings, tmp_path, monkeypatch):
+    # Opening a connection (e.g. Django's start-up checks) creates an empty file.
+    empty = tmp_path / "empty.sqlite3"
+    empty.touch()
+    monkeypatch.setitem(settings.DATABASES["default"], "NAME", empty)
+    assert backup.restore_if_missing()
+
+
+def test_restore_without_media_in_the_backup(settings, tmp_path, monkeypatch):
+    monkeypatch.setenv("POSTERBOARD_BACKUP_REMOTE", "bunny:pb")
+    monkeypatch.setitem(settings.DATABASES["default"], "NAME", tmp_path / "db.sqlite3")
+
+    def rclone(*args):
+        if args[-1] == str(settings.MEDIA_ROOT):
+            raise subprocess.CalledProcessError(3, args, stderr="directory not found")
+
+    monkeypatch.setattr(backup, "rclone", rclone)
+    assert backup.restore_if_missing()

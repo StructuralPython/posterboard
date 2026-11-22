@@ -7,6 +7,7 @@
 {
 	auto_https off
 	admin off
+	persist_config off
 	servers {
 		# Only bunny.net's edge can reach the container; trust its X-Forwarded-* headers.
 		trusted_proxies static 0.0.0.0/0 ::/0
@@ -18,7 +19,7 @@
 
 	@login host {$TINYAUTH_HOST}
 	handle @login {
-		reverse_proxy 127.0.0.1:3000
+		reverse_proxy 127.0.0.1:{$TINYAUTH_PORT:3000}
 	}
 
 	handle /healthz {
@@ -26,19 +27,22 @@
 	}
 
 	handle {
-		# Never trust a client-supplied user header; only tinyauth's.
-		request_header -Remote-User
-		forward_auth 127.0.0.1:3000 {
-			uri /api/auth/caddy
-			copy_headers Remote-User Remote-Name Remote-Email
-		}
-		request_body {
-			max_size 520MB
-		}
-		reverse_proxy 127.0.0.1:8000 {
-			transport http {
-				read_timeout 15m
-				write_timeout 15m
+		# route keeps these in the order written: drop any client-supplied user
+		# header first, then let tinyauth set the real one.
+		route {
+			request_header -Remote-User
+			forward_auth 127.0.0.1:{$TINYAUTH_PORT:3000} {
+				uri /api/auth/caddy
+				copy_headers Remote-User Remote-Name Remote-Email
+			}
+			request_body {
+				max_size 520MB
+			}
+			reverse_proxy 127.0.0.1:{$APP_PORT:8000} {
+				transport http {
+					read_timeout 15m
+					write_timeout 15m
+				}
 			}
 		}
 	}

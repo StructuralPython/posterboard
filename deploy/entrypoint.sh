@@ -15,8 +15,10 @@ mkdir -p "$POSTERBOARD_DATA_DIR/media" "$POSTERBOARD_DATA_DIR/tinyauth"
 python manage.py restore
 python manage.py migrate --noinput
 
+# Internal ports (only Caddy's $PORT is exposed).
+export TINYAUTH_PORT="${TINYAUTH_PORT:-3000}" APP_PORT="${APP_PORT:-8000}"
 export TINYAUTH_SERVER_ADDRESS=127.0.0.1
-export TINYAUTH_SERVER_PORT=3000
+export TINYAUTH_SERVER_PORT="$TINYAUTH_PORT"
 export TINYAUTH_DATABASE_PATH="$POSTERBOARD_DATA_DIR/tinyauth/tinyauth.db"
 export TINYAUTH_RESOURCES_ENABLED=false
 export TINYAUTH_ANALYTICS_ENABLED="${TINYAUTH_ANALYTICS_ENABLED:-false}"
@@ -25,14 +27,15 @@ export TINYAUTH_AUTH_TRUSTEDPROXIES="${TINYAUTH_AUTH_TRUSTEDPROXIES:-127.0.0.1}"
 export TINYAUTH_UI_TITLE="${TINYAUTH_UI_TITLE:-Posterboard}"
 # The login hostname, for Caddy, from TINYAUTH_APPURL.
 TINYAUTH_HOST="${TINYAUTH_APPURL#*://}"
-export TINYAUTH_HOST="${TINYAUTH_HOST%%/*}"
+TINYAUTH_HOST="${TINYAUTH_HOST%%/*}"
+export TINYAUTH_HOST="${TINYAUTH_HOST%%:*}"
 
 pids=()
 start() { "$@" & pids+=("$!"); }
 
 start tinyauth
 start gunicorn config.wsgi:application \
-  --bind 127.0.0.1:8000 --workers 2 --threads 4 --timeout 900 \
+  --bind "127.0.0.1:$APP_PORT" --workers 2 --threads 4 --timeout 900 \
   --access-logfile - --forwarded-allow-ips 127.0.0.1
 start python manage.py run_scheduler
 start python manage.py backup --every 300

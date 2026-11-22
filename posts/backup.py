@@ -20,10 +20,10 @@ import logging
 import os
 import sqlite3
 import subprocess
-from datetime import date
 from pathlib import Path
 
 from django.conf import settings
+from django.utils import timezone
 
 log = logging.getLogger("posts.backup")
 
@@ -86,7 +86,7 @@ def backup_once(state_dir: Path | None = None) -> bool:
         uploaded = True
         log.info("Database backed up.")
     daily_marker = state_dir / "last-daily"
-    today = date.today().isoformat()
+    today = timezone.localdate().isoformat()
     if not daily_marker.exists() or daily_marker.read_text().strip() != today:
         rclone("copyto", str(snap), f"{dest}/daily/{today}.sqlite3")
         daily_marker.write_text(today)
@@ -100,16 +100,25 @@ def restore_if_missing() -> bool:
     """On a fresh container, fetch the database and media from the backup. True if restored."""
     dest = remote()
     db_path = Path(settings.DATABASES["default"]["NAME"])
-    if not dest or db_path.exists():
+    if not dest or (db_path.exists() and db_path.stat().st_size > 0):
         return False
     db_path.parent.mkdir(parents=True, exist_ok=True)
     try:
         rclone("copyto", f"{dest}/{DB_NAME}", str(db_path))
     except subprocess.CalledProcessError as exc:
-        if "not found" in (exc.stderr or "").lower() or "directory not found" in (exc.stderr or "").lower():
+        if _not_found(exc):
             log.info("No backup yet; starting with a new database.")
             return False
         raise
-    rclone("copy", f"{dest}/media", str(settings.MEDIA_ROOT))
+    try:
+        rclone("copy", f"{dest}/media", str(settings.MEDIA_ROOT))
+    except subprocess.CalledProcessError as exc:
+        if not _not_found(exc):
+            raise
     log.info("Restored the database and media from %s.", dest)
     return True
+
+
+def _not_found(exc: subprocess.CalledProcessError) -> bool:
+    # rclone exits 3 for a missing directory and 4 for a missing file.
+    return exc.returncode in (3, 4) or "not found" in (exc.stderr or "").lower()

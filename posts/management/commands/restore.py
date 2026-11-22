@@ -6,6 +6,8 @@ from posts.backup import restore_if_missing
 
 
 class Command(BaseCommand):
+    # System checks open the database, which would create an empty one first.
+    requires_system_checks = []
     help = "Restore the database and media from POSTERBOARD_BACKUP_REMOTE if there is no database yet."
 
     def handle(self, *args, **options):
