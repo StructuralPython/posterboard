@@ -68,11 +68,11 @@ jobs:
             "${{ env.IMAGE }}:sha-$(git rev-parse --short HEAD)"
           for i in $(seq 1 30); do curl -sf http://127.0.0.1:8080/healthz && break; sleep 2; done
           curl -sf http://127.0.0.1:8080/healthz
+          # Caddy answers /healthz itself; wait for tinyauth and Django to start.
+          for i in $(seq 1 30); do curl -sf -o /dev/null -H 'Host: posterboard.localhost' http://127.0.0.1:8080/privacy/ && break; sleep 2; done
           # Every app request must go through tinyauth.
           test "$(curl -s -o /dev/null -w '%{http_code}' -H 'Host: posterboard.localhost' http://127.0.0.1:8080/)" = 401
-          # The privacy policy and its stylesheet are public. Caddy answers /healthz
-          # itself, so wait here for Django to finish starting.
-          for i in $(seq 1 30); do curl -sf -o /dev/null -H 'Host: posterboard.localhost' http://127.0.0.1:8080/privacy/ && break; sleep 2; done
+          # The privacy policy and its stylesheet are public.
           curl -sf -H 'Host: posterboard.localhost' http://127.0.0.1:8080/privacy/ | grep -q 'Privacy policy' || { docker logs pb 2>&1 | tail -40; exit 1; }
           css=$(curl -s -H 'Host: posterboard.localhost' http://127.0.0.1:8080/privacy/ | grep -o '/static/[^"]*\.css')
           curl -sf -o /dev/null -H 'Host: posterboard.localhost' "http://127.0.0.1:8080$css"
