@@ -1,0 +1,74 @@
+{% load posterboard %}
+<section class="list-section">
+  <h2>Scheduled <span class="count">{{ upcoming|length }}</span></h2>
+  {% if upcoming %}
+    <ul class="post-list">
+      {% for post in upcoming %}
+        <li class="post-row status-{{ post.status }}">
+          <a class="post-when" href="{% url 'post_detail' post.pk %}">
+            {% with t=post.publish_at|date:"c" %}
+            <span class="when-date">{{ post.publish_at|date:"D M j" }}</span>
+            <span class="when-time">{{ post.publish_at|time:"g:i A" }}</span>
+            {% endwith %}
+          </a>
+          <a class="post-summary" href="{% url 'post_detail' post.pk %}">
+            <span class="post-first">{{ post.text|truncatechars:140 }}</span>
+            <span class="post-meta">
+              {% if post.status == "failed" %}<span class="tag tag-bad">Failed</span> {{ post.error|truncatechars:120 }}
+              {% elif post.status == "publishing" %}<span class="tag tag-busy">Publishing…</span>
+              {% else %}<span class="tag">{{ post.publish_at|until }}</span>{% endif %}
+              {% if post.media_kind %}<span class="tag tag-media">{{ post.get_media_kind_display }}</span>{% endif %}
+            </span>
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="empty">Nothing scheduled. <a href="{% url 'post_new' %}">Write a post</a>.</p>
+  {% endif %}
+</section>
+
+{% if drafts %}
+<section class="list-section">
+  <h2>Drafts <span class="count">{{ drafts|length }}</span></h2>
+  <ul class="post-list">
+    {% for post in drafts %}
+      <li class="post-row status-draft">
+        <a class="post-when" href="{% url 'post_edit' post.pk %}">
+          <span class="when-date">Draft</span>
+          <span class="when-time">{{ post.updated_at|date:"M j" }}</span>
+        </a>
+        <a class="post-summary" href="{% url 'post_edit' post.pk %}">
+          <span class="post-first">{{ post.text|default:"(empty)"|truncatechars:140 }}</span>
+          {% if post.media_kind %}<span class="post-meta"><span class="tag tag-media">{{ post.get_media_kind_display }}</span></span>{% endif %}
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}
+
+<section class="list-section">
+  <h2>Previous posts <span class="count">{{ previous|length }}</span></h2>
+  {% if previous %}
+    <ul class="post-list">
+      {% for post in previous %}
+        <li class="post-row status-published">
+          <a class="post-when" href="{% url 'post_detail' post.pk %}">
+            <span class="when-date">{{ post.published_at|date:"D M j" }}</span>
+            <span class="when-time">{{ post.published_at|time:"g:i A" }}</span>
+          </a>
+          <a class="post-summary" href="{% url 'post_detail' post.pk %}">
+            <span class="post-first">{{ post.text|truncatechars:140 }}</span>
+            <span class="post-meta">
+              {% if post.media_kind %}<span class="tag tag-media">{{ post.get_media_kind_display }}</span>{% endif %}
+            </span>
+          </a>
+          {% if post.linkedin_url %}<a class="post-out" href="{{ post.linkedin_url }}" target="_blank" rel="noopener">View on LinkedIn ↗</a>{% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="empty">Published posts appear here, and can't be changed.</p>
+  {% endif %}
+</section>

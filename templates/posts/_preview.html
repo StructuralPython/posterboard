@@ -1,0 +1,7 @@
+<div class="li-text-wrap">
+  <div class="li-text" data-li-text>{{ preview.html }}</div>
+  <button type="button" class="li-more" data-li-more hidden>…more</button>
+</div>
+<div class="preview-count {% if preview.over_limit %}over{% endif %}" data-count>
+  {{ preview.chars }} / {{ preview.max_chars }} characters
+</div>

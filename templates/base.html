@@ -1,0 +1,37 @@
+{% load static posterboard %}<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Posterboard{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'posterboard/app.css' %}">
+  <script src="{% static 'posterboard/htmx.min.js' %}" defer></script>
+  <script src="{% static 'posterboard/app.js' %}" defer></script>
+</head>
+<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="wordmark" href="{% url 'dashboard' %}"><span class="pin" aria-hidden="true"></span>Posterboard</a>
+      <nav class="topnav">
+        {% if linkedin %}
+          <a class="pill {% if linkedin.is_expired %}pill-bad{% elif linkedin.needs_renewal %}pill-warn{% else %}pill-ok{% endif %}"
+             href="{% url 'dashboard' %}#connection" title="LinkedIn token expires {{ linkedin.expires_at|date:'M j, Y' }}">
+            {% if linkedin.is_expired %}LinkedIn expired{% else %}LinkedIn · {{ linkedin.days_left }} day{{ linkedin.days_left|pluralize }} left{% endif %}
+          </a>
+        {% else %}
+          <a class="pill pill-bad" href="{% url 'dashboard' %}#connection">LinkedIn not connected</a>
+        {% endif %}
+        <a class="button button-primary" href="{% url 'post_new' %}">New post</a>
+      </nav>
+    </div>
+  </header>
+  <main class="page">
+    {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}<li class="message message-{{ message.tags }}">{{ message }}</li>{% endfor %}
+      </ul>
+    {% endif %}
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

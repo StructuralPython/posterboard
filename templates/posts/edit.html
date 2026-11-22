@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}{% if post.pk %}Edit post{% else %}New post{% endif %} · Posterboard{% endblock %}
+{% block content %}
+<div class="editor">
+  <form class="editor-form panel" method="post" enctype="multipart/form-data" novalidate>
+    {% csrf_token %}
+    <input type="hidden" name="post" value="{{ post.pk|default:'' }}">
+    <div class="editor-head">
+      <h1>{% if post.pk %}Edit post{% else %}New post{% endif %}</h1>
+      {% if post.status == "failed" %}<p class="message message-error">This post failed to publish: {{ post.error }}</p>{% endif %}
+    </div>
+
+    {% if form.non_field_errors %}<div class="message message-error">{{ form.non_field_errors|join:" " }}</div>{% endif %}
+
+    <div class="field">
+      <div class="field-label-row">
+        <label for="{{ form.body.id_for_label }}">Post</label>
+        <div class="toolbar" role="toolbar" aria-label="Formatting">
+          <button type="button" data-wrap="**" title="Bold (Ctrl+B)"><b>B</b></button>
+          <button type="button" data-wrap="*" title="Italic (Ctrl+I)"><i>I</i></button>
+          <button type="button" data-wrap="`" title="Code"><code>{}</code></button>
+        </div>
+      </div>
+      <textarea name="body" id="{{ form.body.id_for_label }}" rows="16" spellcheck="true"
+                hx-post="{% url 'preview' %}" hx-trigger="input changed delay:250ms"
+                hx-target="#preview-text" hx-include="[name=post]" hx-swap="innerHTML">{{ form.body.value|default:"" }}</textarea>
+      <div class="hint">Markdown: <code>**bold**</code>, <code>*italic*</code>, <code>`code`</code>. Lists, #hashtags and links are typed as they'll appear.</div>
+      {% for e in form.body.errors %}<div class="error">{{ e }}</div>{% endfor %}
+    </div>
+
+    <div class="field">
+      <label for="{{ form.upload.id_for_label }}">Media</label>
+      {% if post.media %}
+        <div class="current-media">
+          <span class="tag tag-media">{{ post.get_media_kind_display }}</span>
+          <span class="filename">{{ post.media.name|cut:"uploads/" }}</span>
+          {% if post.media_page_count %}<span class="muted">· {{ post.media_page_count }} page{{ post.media_page_count|pluralize }}</span>{% endif %}
+          <label class="inline"><input type="checkbox" name="remove_media"> Remove</label>
+        </div>
+      {% endif %}
+      <input type="file" name="upload" id="{{ form.upload.id_for_label }}" accept=".jpg,.jpeg,.png,.gif,.mp4,.pdf" data-media-input>
+      <div class="hint">One image (JPG, PNG, GIF), video (MP4) or carousel (PDF, one slide per page). {% if post.media %}Choosing a file replaces the current one.{% endif %}</div>
+      {% for e in form.upload.errors %}<div class="error">{{ e }}</div>{% endfor %}
+    </div>
+
+    <div class="field">
+      <label for="{{ form.media_title.id_for_label }}">Carousel title or alt text</label>
+      <input type="text" name="media_title" id="{{ form.media_title.id_for_label }}" value="{{ form.media_title.value|default:'' }}" maxlength="400">
+      <div class="hint">A carousel shows its title above the slides. For an image or video, this describes it for screen readers.</div>
+    </div>
+
+    <div class="field">
+      <label for="{{ form.publish_at.id_for_label }}">Post at</label>
+      {{ form.publish_at }}
+      <div class="hint">In {% now "e" %} time. Posterboard publishes the post then itself; LinkedIn's own scheduler isn't used.</div>
+      {% for e in form.publish_at.errors %}<div class="error">{{ e }}</div>{% endfor %}
+    </div>
+
+    <div class="actions">
+      <button class="button button-primary" type="submit" name="action" value="schedule">Schedule</button>
+      <button class="button" type="submit" name="action" value="now" data-confirm="Post this to LinkedIn now?">Post now</button>
+      <button class="button button-quiet" type="submit" name="action" value="draft">Save draft</button>
+      {% if post.pk %}
+        <button class="button button-danger" type="submit" form="delete-form" data-confirm="Delete this post?">Delete</button>
+      {% endif %}
+    </div>
+  </form>
+  {% if post.pk %}
+    <form id="delete-form" method="post" action="{% url 'post_delete' post.pk %}">{% csrf_token %}</form>
+  {% endif %}
+
+  <aside class="editor-preview">
+    {% include "posts/_card.html" with mode="edit" %}
+  </aside>
+</div>
+{% endblock %}

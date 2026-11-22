@@ -1,0 +1,47 @@
+{# A LinkedIn-style feed card. mode="edit" adds the view switches and live text. #}
+<div class="preview" data-preview data-view="collapsed" data-width="desktop">
+  {% if mode == "edit" %}
+  <div class="preview-controls">
+    <div class="segmented" role="group" aria-label="Preview view">
+      <button type="button" data-set-view="collapsed" aria-pressed="true">In the feed</button>
+      <button type="button" data-set-view="expanded" aria-pressed="false">Expanded</button>
+    </div>
+    <div class="segmented" role="group" aria-label="Preview width">
+      <button type="button" data-set-width="desktop" aria-pressed="true">Desktop</button>
+      <button type="button" data-set-width="mobile" aria-pressed="false">Phone</button>
+    </div>
+  </div>
+  {% endif %}
+  <div class="li-stage">
+    <article class="li-card">
+      <header class="li-head">
+        {% if linkedin.picture_url %}<img class="li-avatar" src="{{ linkedin.picture_url }}" alt="">{% else %}<span class="li-avatar li-avatar-initials">{{ linkedin.name|default:"You"|slice:":1" }}</span>{% endif %}
+        <div class="li-who">
+          <div class="li-name">{{ linkedin.name|default:"You" }}</div>
+          <div class="li-sub">{% if post.published_at %}{{ post.published_at|date:"M j, Y" }}{% else %}Now{% endif %} · <span aria-label="Public">◍</span></div>
+        </div>
+      </header>
+      <div id="preview-text">{% include "posts/_preview.html" %}</div>
+      <div class="li-media" data-media-slot>
+        {% if post.media and post.media_kind == "image" %}
+          <img src="{% url 'media' post.media.name %}" alt="{{ post.media_title }}">
+        {% elif post.media and post.media_kind == "video" %}
+          <video src="{% url 'media' post.media.name %}" controls preload="metadata"></video>
+        {% elif post.media and post.media_kind == "document" %}
+          <div class="li-doc" data-carousel>
+            <div class="li-doc-title">{{ post.media_title|default:"Untitled" }} · {{ post.media_page_count }} page{{ post.media_page_count|pluralize }}</div>
+            <div class="li-doc-pages">
+              {% for page in post.media_pages %}<img src="{% url 'media' page %}" alt="Page {{ forloop.counter }}" {% if not forloop.first %}hidden{% endif %}>{% endfor %}
+              <button type="button" class="li-doc-nav li-doc-prev" data-carousel-prev aria-label="Previous page">‹</button>
+              <button type="button" class="li-doc-nav li-doc-next" data-carousel-next aria-label="Next page">›</button>
+            </div>
+            <div class="li-doc-count"><span data-carousel-index>1</span> / {{ post.media_page_count }}</div>
+          </div>
+        {% endif %}
+      </div>
+      <footer class="li-actions" aria-hidden="true">
+        <span>Like</span><span>Comment</span><span>Repost</span><span>Send</span>
+      </footer>
+    </article>
+  </div>
+</div>

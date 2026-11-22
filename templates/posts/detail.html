@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Post · Posterboard{% endblock %}
+{% block content %}
+<div class="editor">
+  <section class="panel detail">
+    <div class="eyebrow">{{ post.get_status_display }}</div>
+    {% if post.status == "published" %}
+      <h1>Posted {{ post.published_at|date:"l, F j, Y" }} at {{ post.published_at|time:"g:i A" }}</h1>
+      <p class="muted">Published posts are kept exactly as they went out and can't be changed. Edit or delete them on LinkedIn.</p>
+    {% else %}
+      <h1>Publishing…</h1>
+      <p class="muted">This post is being sent to LinkedIn.</p>
+    {% endif %}
+    <div class="detail-actions">
+      {% if post.linkedin_url %}<a class="button button-primary" href="{{ post.linkedin_url }}" target="_blank" rel="noopener">View on LinkedIn ↗</a>{% endif %}
+      <button class="button" type="button" data-copy="#published-text">Copy text</button>
+      <form method="post" action="{% url 'post_duplicate' post.pk %}">{% csrf_token %}
+        <button class="button button-quiet" type="submit">Copy into a new draft</button>
+      </form>
+    </div>
+    <h2>Text as posted</h2>
+    <pre class="published-text" id="published-text">{{ text }}</pre>
+    <h2>Markdown</h2>
+    <pre class="published-md">{{ post.body }}</pre>
+    {% if post.linkedin_urn %}<p class="muted small">LinkedIn ID: <code>{{ post.linkedin_urn }}</code></p>{% endif %}
+  </section>
+  <aside class="editor-preview">
+    {% include "posts/_card.html" with mode="detail" %}
+  </aside>
+</div>
+{% endblock %}

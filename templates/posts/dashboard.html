@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load posterboard %}
+{% block content %}
+<section id="connection" class="panel connection">
+  {% if linkedin %}
+    <div class="connection-who">
+      {% if linkedin.picture_url %}<img class="avatar" src="{{ linkedin.picture_url }}" alt="">{% else %}<span class="avatar avatar-initials">{{ linkedin.name|slice:":1" }}</span>{% endif %}
+      <div>
+        <div class="eyebrow">Posting as</div>
+        <div class="connection-name">{{ linkedin.name }}</div>
+      </div>
+    </div>
+    <div class="connection-token">
+      <div class="token-line">
+        {% if linkedin.is_expired %}
+          <strong class="bad">The LinkedIn connection expired on {{ linkedin.expires_at|date:"M j, Y" }}.</strong> Scheduled posts won't publish until you reconnect.
+        {% else %}
+          <strong class="{% if linkedin.needs_renewal %}warn{% endif %}">{{ linkedin.days_left }} day{{ linkedin.days_left|pluralize }} left</strong>
+          until the connection expires on {{ linkedin.expires_at|date:"D M j, Y" }}.
+        {% endif %}
+      </div>
+      <div class="meter {% if linkedin.is_expired %}meter-bad{% elif linkedin.needs_renewal %}meter-warn{% endif %}"
+           role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ linkedin|percent_left }}"
+           aria-label="Connection time left">
+        <span style="width: {{ linkedin|percent_left }}%"></span>
+      </div>
+      <div class="token-sub">Connected {{ linkedin.connected_at|date:"M j, Y" }} · LinkedIn tokens last {{ linkedin.lifetime_days }} days and can't be refreshed automatically.</div>
+    </div>
+    <div class="connection-actions">
+      <a class="button {% if linkedin.needs_renewal %}button-primary{% endif %}" href="{% url 'linkedin_connect' %}">Renew now</a>
+      <form method="post" action="{% url 'linkedin_disconnect' %}">{% csrf_token %}
+        <button class="button button-quiet" type="submit">Disconnect</button>
+      </form>
+    </div>
+  {% else %}
+    <div class="connection-empty">
+      <div>
+        <div class="eyebrow">LinkedIn</div>
+        <p>Sign in to LinkedIn once to let Posterboard post for you. The connection lasts 60 days; Posterboard counts them down here.</p>
+      </div>
+      <a class="button button-primary" href="{% url 'linkedin_connect' %}">Connect LinkedIn</a>
+    </div>
+  {% endif %}
+</section>
+
+{% if after_expiry %}
+  <div class="message message-warning">
+    {{ after_expiry|length }} scheduled post{{ after_expiry|pluralize }} {{ after_expiry|pluralize:"is,are" }} due after the connection expires. Renew before {{ linkedin.expires_at|date:"M j" }} or {{ after_expiry|pluralize:"it,they" }} won't post.
+  </div>
+{% endif %}
+
+<div id="lists" hx-get="{% url 'dashboard' %}" hx-trigger="{% if refresh %}every 10s{% else %}every 60s{% endif %}" hx-swap="innerHTML">
+  {% include "posts/_lists.html" %}
+</div>
+{% endblock %}
