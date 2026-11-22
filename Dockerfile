@@ -5,6 +5,8 @@ FROM ghcr.io/tinyauthapp/tinyauth:v5.2.0 AS tinyauth
 FROM ghcr.io/astral-sh/uv:0.11 AS uv
 
 FROM python:3.14-slim
+ARG REVISION=dev
+ENV POSTERBOARD_REVISION=$REVISION
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     UV_COMPILE_BYTECODE=1 \

@@ -17,10 +17,19 @@
 :{$PORT:8080} {
 	encode zstd gzip
 
-	# bunny.net forwards plain-http visits too, marked X-Forwarded-Proto: http.
-	# Send them to https first, or tinyauth would be asked to return the user
-	# to an http address after signing in (and refuse, as a downgrade).
-	@insecure header X-Forwarded-Proto http
+	# Which build is answering (set by the image build).
+	header X-Posterboard-Revision "{$POSTERBOARD_REVISION:dev}"
+
+	# bunny.net forwards plain-http visits too. It marks https ones with
+	# X-Forwarded-Proto: https, so anything from the edge (it always adds
+	# X-Forwarded-For) without that mark is sent to https first. Otherwise
+	# tinyauth is asked to return the user to an http address after signing in,
+	# and refuses it as a downgrade. Local requests (health checks, CI, a local
+	# stack) carry no X-Forwarded-For and are left alone.
+	@insecure {
+		header X-Forwarded-For *
+		not header X-Forwarded-Proto https
+	}
 	redir @insecure https://{host}{uri} permanent
 
 	@login host {$TINYAUTH_HOST}

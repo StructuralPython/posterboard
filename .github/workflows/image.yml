@@ -56,6 +56,7 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          build-args: REVISION=${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Smoke test the image
@@ -70,8 +71,11 @@ jobs:
           curl -sf http://127.0.0.1:8080/healthz
           # Caddy answers /healthz itself; wait for tinyauth and Django to start.
           for i in $(seq 1 30); do curl -sf -o /dev/null -H 'Host: posterboard.localhost' http://127.0.0.1:8080/privacy/ && break; sleep 2; done
-          # Plain-http visits are sent to https before anything else.
-          test "$(curl -s -o /dev/null -w '%{redirect_url}' -H 'Host: posterboard.localhost' -H 'X-Forwarded-Proto: http' http://127.0.0.1:8080/x)" = https://posterboard.localhost/x
+          # Plain-http visits from the edge are sent to https before anything else.
+          test "$(curl -s -o /dev/null -w '%{redirect_url}' -H 'Host: posterboard.localhost' -H 'X-Forwarded-For: 203.0.113.9' http://127.0.0.1:8080/x)" = https://posterboard.localhost/x
+          test "$(curl -s -o /dev/null -w '%{redirect_url}' -H 'Host: posterboard.localhost' -H 'X-Forwarded-For: 203.0.113.9' -H 'X-Forwarded-Proto: http' http://127.0.0.1:8080/x)" = https://posterboard.localhost/x
+          # Each response names the build.
+          curl -sI http://127.0.0.1:8080/healthz | grep -qi "x-posterboard-revision: $(git rev-parse HEAD)"
           # Every app request must go through tinyauth.
           test "$(curl -s -o /dev/null -w '%{http_code}' -H 'Host: posterboard.localhost' http://127.0.0.1:8080/)" = 401
           # The privacy policy and its stylesheet are public.

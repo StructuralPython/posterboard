@@ -245,5 +245,5 @@ def test_the_privacy_policy_shows_the_contact_address(settings):
 def test_caddy_sends_plain_http_visits_to_https():
     # Otherwise tinyauth is asked to return an https sign-in to an http page.
     caddyfile = open("deploy/Caddyfile").read()
-    assert "@insecure header X-Forwarded-Proto http" in caddyfile
+    assert "not header X-Forwarded-Proto https" in caddyfile
     assert "redir @insecure https://{host}{uri}" in caddyfile
