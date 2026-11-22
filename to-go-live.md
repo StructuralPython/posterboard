@@ -4,7 +4,7 @@ Check each item off as you go. More detail is in README.md.
 
 ## 1. LinkedIn app
 
-- [ ] Create an app at <https://www.linkedin.com/developers/apps>, linked to the StructuralPython page, named "Posterboard". LinkedIn doesn't allow "Linked" or "In" in app names.
+- [ ] Create an app at <https://www.linkedin.com/developers/apps>, named "Posterboard". LinkedIn requires every app to be associated with a company page, so pick StructuralPython; this doesn't affect who posts. Posts go out from the personal profile you sign in with. LinkedIn doesn't allow "Linked" or "In" in app names.
 - [ ] In **Products**, add **Share on LinkedIn** and **Sign In with LinkedIn using OpenID Connect**.
 - [ ] In **Auth**, add the redirect URL `https://posterboard.structuralpython.com/linkedin/callback/`.
 - [ ] Copy the **Client ID** and **Client Secret**.

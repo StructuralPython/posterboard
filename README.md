@@ -64,9 +64,10 @@ Containers restarts it cleanly.
 
 ### 1. LinkedIn app
 
-1. At <https://www.linkedin.com/developers/apps>, create an app tied to the
-   StructuralPython company page. LinkedIn doesn't allow "Linked" or "In" in app names;
-   "Posterboard" is fine.
+1. At <https://www.linkedin.com/developers/apps>, create an app. LinkedIn requires every
+   app to be associated with a company page (StructuralPython), but that doesn't change
+   who posts: Posterboard posts as the member who signs in. LinkedIn doesn't allow
+   "Linked" or "In" in app names; "Posterboard" is fine.
 2. Under **Products**, add **Share on LinkedIn** and **Sign In with LinkedIn using OpenID
    Connect**. Both are self-serve; no review is needed.
 3. Under **Auth**, add the redirect URL `https://posterboard.structuralpython.com/linkedin/callback/`
