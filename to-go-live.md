@@ -18,8 +18,8 @@ Check each item off as you go. More detail is in README.md.
 
 ## 3. bunny.net storage (backups)
 
-- [ ] Create a storage zone named `posterboard`.
-- [ ] Note its FTP username (the zone name) and password, and run `rclone obscure '<password>'`.
+- [ ] The storage zone is `posterboard-linkedin`, with **S3 compatibility** turned on. (S3 can only be turned on when a zone is created.)
+- [ ] Note its main region's S3 endpoint, `https://<region>-s3.storage.bunnycdn.com` (e.g. `ny`, `la`), and its password from the **Access** tab.
 
 ## 4. Image
 
@@ -45,12 +45,10 @@ GitHub Actions builds the image on every push to `main` and pushes it to `ghcr.i
   | `LINKEDIN_CLIENT_ID` / `LINKEDIN_CLIENT_SECRET` | from step 1 |
   | `TINYAUTH_APPURL` | `https://auth.posterboard.structuralpython.com` |
   | `TINYAUTH_AUTH_USERS` | from step 2 |
-  | `POSTERBOARD_BACKUP_REMOTE` | `bunny:posterboard` |
-  | `RCLONE_CONFIG_BUNNY_TYPE` | `ftp` |
-  | `RCLONE_CONFIG_BUNNY_HOST` | `storage.bunnycdn.com` (or your region's host) |
-  | `RCLONE_CONFIG_BUNNY_USER` | the zone name |
-  | `RCLONE_CONFIG_BUNNY_PASS` | the obscured password |
-  | `RCLONE_CONFIG_BUNNY_EXPLICIT_TLS` | `true` |
+  | `RCLONE_CONFIG_BUNNY_ENDPOINT` | the S3 endpoint from step 3 |
+  | `RCLONE_CONFIG_BUNNY_SECRET_ACCESS_KEY` | the storage zone password, as is |
+
+  The image already sets the rest of the backup settings (zone `posterboard-linkedin`, S3).
 
 ## 6. Hostnames
 

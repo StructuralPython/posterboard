@@ -81,12 +81,11 @@ Community Management API. See `shy-linkedin-plan.md` for that research.
 
 ### 2. Storage zone for backups
 
-Create a bunny.net storage zone (e.g. `posterboard`). Its FTP credentials go in rclone
-environment variables (see `.env.example`). Obscure the password first:
-
-```bash
-rclone obscure 'storage-zone-password'
-```
+Backups go to the bunny.net storage zone `posterboard-linkedin`, through bunny.net's
+S3-compatible API. S3 has to be turned on when the zone is created; it can't be added
+later. The image already points rclone at the zone (`Dockerfile`); the deployment adds
+the zone's S3 endpoint, `https://<region>-s3.storage.bunnycdn.com`, and its password
+(the S3 secret key). See `.env.example`.
 
 ### 3. A tinyauth user
 
@@ -117,8 +116,8 @@ Set the environment variables from `.env.example`:
 | `LINKEDIN_CLIENT_ID`, `LINKEDIN_CLIENT_SECRET` | from the LinkedIn app |
 | `TINYAUTH_APPURL` | `https://auth.posterboard.structuralpython.com` |
 | `TINYAUTH_AUTH_USERS` | from step 3 |
-| `POSTERBOARD_BACKUP_REMOTE` | `bunny:posterboard` |
-| `RCLONE_CONFIG_BUNNY_*` | the storage zone's FTP settings |
+| `RCLONE_CONFIG_BUNNY_ENDPOINT` | `https://<region>-s3.storage.bunnycdn.com` |
+| `RCLONE_CONFIG_BUNNY_SECRET_ACCESS_KEY` | the storage zone password |
 
 Optional: `POSTERBOARD_ENCRYPTION_KEY` (a Fernet key for the stored token; derived from
 the secret key if unset), `LINKEDIN_API_VERSION` (default `202510`; LinkedIn supports

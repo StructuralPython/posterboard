@@ -6,7 +6,7 @@ while the app writes), and uploads it only if it changed since the last upload.
 Media files are copied (never deleted remotely). Once a day the snapshot is also
 kept under ``daily/`` so a bad change can be rolled back.
 
-Remote layout under ``POSTERBOARD_BACKUP_REMOTE`` (e.g. ``bunny:posterboard``):
+Remote layout under ``POSTERBOARD_BACKUP_REMOTE`` (e.g. ``bunny:posterboard-linkedin``):
 
     posterboard.sqlite3
     daily/2026-11-22.sqlite3

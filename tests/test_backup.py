@@ -94,3 +94,10 @@ def test_restore_without_media_in_the_backup(settings, tmp_path, monkeypatch):
 
     monkeypatch.setattr(backup, "rclone", rclone)
     assert backup.restore_if_missing()
+
+
+def test_the_image_backs_up_to_the_s3_storage_zone():
+    dockerfile = open("Dockerfile").read()
+    assert "POSTERBOARD_BACKUP_REMOTE=bunny:posterboard-linkedin" in dockerfile
+    assert "RCLONE_CONFIG_BUNNY_TYPE=s3" in dockerfile
+    assert "RCLONE_CONFIG_BUNNY_ACCESS_KEY_ID=posterboard-linkedin" in dockerfile
