@@ -102,7 +102,8 @@ GitHub Actions (`.github/workflows/image.yml`) tests every push. On `main` it bu
 image and pushes it to `ghcr.io/structuralpython/posterboard:latest`, plus a `sha-…` tag
 and, for `v*` tags, the version. It then starts the image and checks that `/healthz`
 answers and that the app refuses requests that tinyauth hasn't signed in. The package is
-private, so Magic Containers needs a GitHub token with `read:packages`.
+public (the repo stays private), so Magic Containers pulls it without a token. The image
+holds no secrets: they all come from environment variables.
 
 In Magic Containers, create an app from the image and expose container port **8080**.
 Set the environment variables from `.env.example`:
